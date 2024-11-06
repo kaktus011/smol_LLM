@@ -1,0 +1,17 @@
+Input: January - Income $5000, Expenses $3000; February - Income $4500, Expenses $3200.
+Output: In February, expenses rose slightly, but income decreased.
+
+Input: March - Income $4800, Expenses $3100; April - Income $4700, Expenses $3300.
+Output: Income remained stable in April, with a minor increase in expenses.
+
+Input: May - Income $5100, Expenses $2900; June - Income $5300, Expenses $3000.
+Output: Income increased in June, while expenses remained steady.
+
+Input: July - Income $4900, Expenses $3200; August - Income $4600, Expenses $3300.
+Output: Income decreased in August, and expenses rose slightly.
+
+Input: September - Income $5400, Expenses $2900; October - Income $5500, Expenses $2950.
+Output: October saw a slight increase in both income and expenses.
+
+Input: November - Income $4700, Expenses $3100; December - Income $4800, Expenses $3400.
+Output: December experienced higher expenses with a slight increase in income.
