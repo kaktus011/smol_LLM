@@ -30,5 +30,4 @@ plot.plot(df['Month_Year'], df['Profit'], label='Profit', color='green')
 
 # Add titles and labels
 plot.title('Monthly Financial Overview')
-plot.legend()  # Add legend
 plot.root.mainloop()
