@@ -1,5 +1,6 @@
 import pandas as pd
 from myplotlib import MyPyPlot
+import mygraphlib
 
 # Define the data
 data = {
@@ -21,6 +22,9 @@ df['Month_Year'] = df['Month'] + ' ' + df['Year'].astype(str)
 # Calculate Profit
 df['Profit'] = df['Income'] - df['Expenses']
 
+# Save the data to a CSV file
+df.to_csv('data/financial_data.csv', index=False)
+
 # Plot Income, Expenses, and Profit using MyPyPlot
 plot = MyPyPlot()
 plot.figure(figsize=(1200, 800))  # Increased size in pixels for tkinter canvas
@@ -28,7 +32,7 @@ plot.plot(df['Month_Year'], df['Income'], label='Income', color='blue')
 plot.plot(df['Month_Year'], df['Expenses'], label='Expenses', color='red')
 plot.plot(df['Month_Year'], df['Profit'], label='Profit', color='green')
 
-# Add titles and labels
 plot.title('Monthly Financial Overview')
-plot.legend()  # Add legend
-plot.root.mainloop()
+plot.legend()
+
+mygraphlib.plot_pie_chart('data/financial_data.csv')
