@@ -3,15 +3,12 @@ import tkinter as tk
 import math
 
 def plot_pie_chart(csv_file):
-    # Read the data from the CSV file
     df = pd.read_csv(csv_file)
 
-    # Calculate total Income, Expenses, and Profit
     total_income = df['Income'].sum()
     total_expenses = df['Expenses'].sum()
     total_profit = df['Profit'].sum()
 
-    # Data for the pie chart
     pie_data = {
         'Income': total_income,
         'Expenses': total_expenses,
