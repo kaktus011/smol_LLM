@@ -15,7 +15,7 @@ def preprocess_data(df):
     return df
 
 def define_features_and_target(df):
-    X = df[['Month', 'Year', 'Marketing_Spend', 'Number_of_Employees']]
+    X = df[['Income', 'Expenses']]
     y = df['Profit']
     return X, y
 
@@ -70,4 +70,4 @@ if __name__ == "__main__":
     best_model = train_model(X_train, y_train, param_grid)
     y_pred = evaluate_model(best_model, X_test, y_test)
     save_model(best_model, 'financial_model.pkl')
-    save_predictions(y_test, y_pred, 'predictions.csv')
+    save_predictions(y_test, y_pred, 'train_predictions.csv')
