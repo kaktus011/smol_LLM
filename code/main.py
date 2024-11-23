@@ -1,44 +1,45 @@
 import pandas as pd
+from sklearn.model_selection import train_test_split, GridSearchCV
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.metrics import mean_squared_error, r2_score
 import joblib
 import os
 
-def load_data(filepath):
-    return pd.read_csv(filepath)
+# Load and preprocess data
+df = pd.read_csv('data/financial_training_data.csv')
+df['Month_Year'] = pd.to_datetime(df['Month_Year'], format='%b %Y')
+df['Month'] = df['Month_Year'].dt.month
+df['Year'] = df['Month_Year'].dt.year
 
-def preprocess_data(df):
-    df['Month_Year'] = df['Month'] + ' ' + df['Year'].astype(str)
-    df['Actual_Profit'] = df['Income'] - df['Expenses']
-    df.to_csv('data/financial_data.csv', index=False)
-    df['Month'] = pd.to_datetime(df['Month_Year'], format='%b %Y').dt.month
-    df['Year'] = pd.to_datetime(df['Month_Year'], format='%b %Y').dt.year
-    return df
+# Define features and target
+X = df[['Income', 'Expenses']]
+y = df['Profit']
 
-def load_model(filepath):
-    return joblib.load(filepath)
+# Split data
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-def make_predictions(model, df):
-    X = df[['Income', 'Expenses']]
-    df['Predicted_Profit'] = model.predict(X)
-    return df
+# Train model
+param_grid = {
+    'n_estimators': [100, 200, 300],
+    'max_depth': [None, 10, 20, 30],
+    'min_samples_split': [2, 5, 10],
+    'min_samples_leaf': [1, 2, 4]
+}
+model = RandomForestRegressor(random_state=42)
+grid_search = GridSearchCV(estimator=model, param_grid=param_grid, cv=5, n_jobs=-1, scoring='neg_mean_squared_error')
+grid_search.fit(X_train, y_train)
+best_model = grid_search.best_estimator_
 
-def display_predictions(df):
-    print(df[['Month_Year', 'Income', 'Expenses', 'Marketing_Spend', 'Number_of_Employees', 'Actual_Profit', 'Predicted_Profit']])
+# Evaluate model
+y_pred = best_model.predict(X_test)
+mse = mean_squared_error(y_test, y_pred)
+r2 = r2_score(y_test, y_pred)
+print(f'Mean Squared Error: {mse}')
+print(f'R^2 Score: {r2}')
 
-def save_predictions(y_test, y_pred, filename):
-    try:
-        predictions_df = pd.DataFrame({'Actual': y_test, 'Predicted': y_pred})
-        predictions_df.to_csv(filename, index=False)
-        if os.path.exists(filename):
-            print(f"Predictions saved successfully as '{filename}'")
-        else:
-            print(f"Failed to save the predictions to '{filename}'")
-    except Exception as e:
-        print(f"An error occurred while saving the predictions: {e}")
+# Save model
+joblib.dump(best_model, 'financial_model.pkl')
 
-if __name__ == "__main__":
-    df = load_data('data/financial_data.csv')
-    df = preprocess_data(df)
-    model = load_model('financial_model.pkl')
-    df = make_predictions(model, df)
-    display_predictions(df)
-    save_predictions(df['Actual_Profit'], df['Predicted_Profit'], 'actual_predictions.csv')
+# Save predictions
+predictions_df = pd.DataFrame({'Actual': y_test, 'Predicted': y_pred})
+predictions_df.to_csv('train_predictions.csv', index=False)
