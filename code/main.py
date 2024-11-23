@@ -6,7 +6,7 @@ import joblib
 import os
 
 # Load and preprocess data
-df = pd.read_csv('data/financial_training_data.csv')
+df = pd.read_csv('data/financial_data.csv')
 df['Month_Year'] = pd.to_datetime(df['Month_Year'], format='%b %Y')
 df['Month'] = df['Month_Year'].dt.month
 df['Year'] = df['Month_Year'].dt.year
@@ -42,4 +42,4 @@ joblib.dump(best_model, 'financial_model.pkl')
 
 # Save predictions
 predictions_df = pd.DataFrame({'Actual': y_test, 'Predicted': y_pred})
-predictions_df.to_csv('train_predictions.csv', index=False)
+predictions_df.to_csv('profit_predictions.csv', index=False)
