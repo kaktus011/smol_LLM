@@ -5,20 +5,16 @@ from sklearn.metrics import mean_squared_error, r2_score
 import joblib
 import os
 
-# Load and preprocess data
 df = pd.read_csv('data/financial_data.csv')
-df['Month_Year'] = pd.to_datetime(df['Month_Year'], format='%b %Y')
-df['Month'] = df['Month_Year'].dt.month
-df['Year'] = df['Month_Year'].dt.year
+#df['Month_Year'] = pd.to_datetime(df['Month_Year'], format='%b %Y')
+#df['Month'] = df['Month_Year'].dt.month
+#df['Year'] = df['Month_Year'].dt.year
 
-# Define features and target
 X = df[['Income', 'Expenses']]
 y = df['Profit']
 
-# Split data
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-# Train model
 param_grid = {
     'n_estimators': [100, 200, 300],
     'max_depth': [None, 10, 20, 30],
@@ -30,16 +26,13 @@ grid_search = GridSearchCV(estimator=model, param_grid=param_grid, cv=5, n_jobs=
 grid_search.fit(X_train, y_train)
 best_model = grid_search.best_estimator_
 
-# Evaluate model
 y_pred = best_model.predict(X_test)
 mse = mean_squared_error(y_test, y_pred)
 r2 = r2_score(y_test, y_pred)
 print(f'Mean Squared Error: {mse}')
 print(f'R^2 Score: {r2}')
 
-# Save model
 joblib.dump(best_model, 'financial_model.pkl')
 
-# Save predictions
 predictions_df = pd.DataFrame({'Actual': y_test, 'Predicted': y_pred})
 predictions_df.to_csv('profit_predictions.csv', index=False)
